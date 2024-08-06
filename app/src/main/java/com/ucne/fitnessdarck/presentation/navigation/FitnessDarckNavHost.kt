@@ -32,11 +32,9 @@ fun FitnessDarckNavHost(
                 BottomNavigation.entries
                     .forEachIndexed { _, navigationItem ->
 
-
                         val isSelected by remember(currentRoute) {
                             derivedStateOf { currentRouteTrimmed == navigationItem.route::class.qualifiedName }
                         }
-
 
                         NavigationBarItem(
                             selected = isSelected,

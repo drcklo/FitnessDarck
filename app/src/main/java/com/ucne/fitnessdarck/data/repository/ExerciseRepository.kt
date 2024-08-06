@@ -5,9 +5,9 @@ import com.ucne.fitnessdarck.data.local.entities.ExerciseEntity
 import com.ucne.fitnessdarck.data.remote.ExerciseApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
-import java.io.IOException
 
 @Singleton
 class ExerciseRepository @Inject constructor(
@@ -20,10 +20,8 @@ class ExerciseRepository @Inject constructor(
                 val exercises = api.getExercises(page, size)
                 exerciseDao.insertAll(exercises)
             } catch (e: IOException) {
-                // Handle network error here
                 e.printStackTrace()
             } catch (e: Exception) {
-                // Handle other types of errors
                 e.printStackTrace()
             }
         }
