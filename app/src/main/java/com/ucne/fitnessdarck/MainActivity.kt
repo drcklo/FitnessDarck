@@ -4,20 +4,22 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.ucne.fitnessdarck.presentation.navigation.BottomNavigation
 import com.ucne.fitnessdarck.presentation.navigation.FitnessDarckNavHost
+import com.ucne.fitnessdarck.presentation.navigation.Screens
+import com.ucne.fitnessdarck.presentation.screens.authentication.AuthState
+import com.ucne.fitnessdarck.presentation.screens.authentication.AuthViewModel
+import com.ucne.fitnessdarck.presentation.screens.settings.SettingsViewModel
 import com.ucne.fitnessdarck.ui.theme.DataStoreManager
 import com.ucne.fitnessdarck.ui.theme.FitnessDarckTheme
-import com.ucne.fitnessdarck.presentation.screens.settings.SettingsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -26,22 +28,34 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         val dataStoreManager = DataStoreManager(applicationContext)
         val settingsViewModel = SettingsViewModel(dataStoreManager)
+        val authViewModel: AuthViewModel by viewModels()
+
         enableEdgeToEdge()
+
         setContent {
-            val isDarkTheme = settingsViewModel.isDarkTheme.collectAsState().value
+            val isDarkTheme by settingsViewModel.isDarkTheme.collectAsState(initial = false)
+            val authState by authViewModel.authState.observeAsState(AuthState.Unauthenticated)
+            val isAuthenticated = authState is AuthState.Authenticated
+
             FitnessDarckTheme(darkTheme = isDarkTheme) {
-
                 val navController = rememberNavController()
-                val navBackStackEntry by navController.currentBackStackEntryAsState()
-                
-                val currentRoute = navBackStackEntry?.destination?.route
-                    ?: BottomNavigation.HOME.route::class.qualifiedName.orEmpty()
 
-                val currentRouteTrimmed by remember(currentRoute) {
-                    derivedStateOf { currentRoute.substringBefore("?") }
+                LaunchedEffect(authState) {
+                    if (isAuthenticated) {
+                        navController.navigate(Screens.HomeGraph::class.qualifiedName!!) {
+                            popUpTo(0) { inclusive = true }
+                        }
+                    } else {
+                        navController.navigate(Screens.Login::class.qualifiedName!!) {
+                            popUpTo(0) { inclusive = true }
+                        }
+                    }
                 }
 
-                FitnessDarckNavHost(currentRoute, currentRouteTrimmed, navController)
+                FitnessDarckNavHost(
+                    navController = navController,
+                    isAuthenticated = isAuthenticated
+                )
             }
         }
     }

@@ -4,6 +4,7 @@ plugins {
     id("com.google.devtools.ksp")
     alias(libs.plugins.kotlinx.serialization)
     id("com.google.dagger.hilt.android")
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -78,6 +79,8 @@ dependencies {
 // Hilt for Dependency Injection
     implementation(libs.hilt.android)
     implementation(libs.volley)
+    implementation(libs.firebase.auth)
+    implementation(libs.androidx.runtime.livedata)
     ksp(libs.hilt.android.compiler)
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 
