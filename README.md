@@ -1,6 +1,6 @@
-# FitnessDark
+# FitnessDarck
 
-FitnessDark es una aplicación de ejercicios para Android diseñada para ayudarte a mejorar tu estado físico. Utiliza Jetpack Compose para la interfaz de usuario, Hilt para la inyección de dependencias, Retrofit para las solicitudes de red y Room para la gestión de bases de datos locales.
+FitnessDarck es una aplicación de ejercicios para Android diseñada para ayudarte a mejorar tu estado físico. Utiliza Jetpack Compose para la interfaz de usuario, Hilt para la inyección de dependencias, Retrofit para las solicitudes de red, Firebase para el sistema de inicio de sesión y Room para la gestión de bases de datos locales.
 
 ## Características
 
@@ -14,11 +14,12 @@ FitnessDark es una aplicación de ejercicios para Android diseñada para ayudart
 - **Hilt:** Para la inyección de dependencias.
 - **Retrofit:** Para realizar solicitudes a servicios web.
 - **Room:** Para almacenamiento de datos local.
+- **Firebase:** Logica de usuarios e inicio de sesión.
 
 ## Instalación
 
 1. Clona el repositorio:
-   git clone https://github.com/drcklo/FitnessDark.git
+   git clone https://github.com/drcklo/FitnessDarck.git
 2. Abre el proyecto en Android Studio.
 
 3. Sincroniza el proyecto con Gradle:
