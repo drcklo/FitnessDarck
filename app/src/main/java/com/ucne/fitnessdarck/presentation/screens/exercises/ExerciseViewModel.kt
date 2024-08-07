@@ -5,7 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.ucne.fitnessdarck.data.local.entities.ExerciseEntity
 import com.ucne.fitnessdarck.data.repository.ExerciseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -50,5 +52,21 @@ class ExerciseViewModel @Inject constructor(
         fetchAndSaveExercises()
     }
 
+    fun getExercisesByCriteria(level: String, equipment: String, force: String, muscle: String) {
+        viewModelScope.launch {
+            val fetchedExercises =
+                repository.getExercisesByCriteria(level, equipment, force, muscle)
+            _exercises.value = fetchedExercises
+        }
+    }
+
     fun getPageSize() = pageSize
+
+    fun getExercisesByIds(ids: List<String>): StateFlow<List<ExerciseEntity>> {
+        val resultFlow = MutableStateFlow<List<ExerciseEntity>>(emptyList())
+        viewModelScope.launch {
+            resultFlow.value = repository.getExercisesByIds(ids)
+        }
+        return resultFlow.asStateFlow()
+    }
 }

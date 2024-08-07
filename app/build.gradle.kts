@@ -106,4 +106,8 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation ("androidx.datastore:datastore-preferences:1.1.1")
     implementation("androidx.datastore:datastore:1.1.1")
+
+    implementation("androidx.compose.runtime:runtime-livedata:1.4.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.1")
+    implementation("androidx.compose.runtime:runtime:1.4.0")
 }

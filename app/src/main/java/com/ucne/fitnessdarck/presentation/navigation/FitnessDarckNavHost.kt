@@ -17,13 +17,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
-import com.ucne.fitnessdarck.Greeting
 import com.ucne.fitnessdarck.presentation.screens.authentication.LoginScreen
 import com.ucne.fitnessdarck.presentation.screens.authentication.SignUpScreen
 import com.ucne.fitnessdarck.presentation.screens.exercises.ExerciseScreen
 import com.ucne.fitnessdarck.presentation.screens.profile.ProfileScreen
+import com.ucne.fitnessdarck.presentation.screens.routines.CreateRoutineScreen
+import com.ucne.fitnessdarck.presentation.screens.routines.RoutinesListScreen
 import com.ucne.fitnessdarck.presentation.screens.settings.SettingsScreen
-
 
 @Composable
 fun FitnessDarckNavHost(
@@ -88,16 +88,16 @@ fun FitnessDarckNavHost(
                 route = Screens.HomeGraph::class.qualifiedName!!
             ) {
                 composable(Screens.Home::class.qualifiedName!!) {
-                    Greeting("Home")
+                    CreateRoutineScreen()
                 }
                 composable(Screens.Routines::class.qualifiedName!!) {
-                    Greeting("Routines")
+                    RoutinesListScreen()
                 }
                 composable(Screens.Exercises::class.qualifiedName!!) {
                     ExerciseScreen()
                 }
                 composable(Screens.Profile::class.qualifiedName!!) {
-                    ProfileScreen(authViewModel = hiltViewModel(), navController = navController)
+                    ProfileScreen(authViewModel = hiltViewModel())
                 }
                 composable(Screens.Settings::class.qualifiedName!!) {
                     SettingsScreen()

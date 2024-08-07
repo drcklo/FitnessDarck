@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.ucne.fitnessdarck.data.local.dao.ExerciseDao
+import com.ucne.fitnessdarck.data.local.dao.RoutineDao
 import com.ucne.fitnessdarck.data.local.database.ExerciseDb
 import com.ucne.fitnessdarck.data.remote.ExerciseApi
 import com.ucne.fitnessdarck.ui.theme.DataStoreManager
@@ -45,13 +46,19 @@ object AppModule {
             appContext,
             ExerciseDb::class.java,
             "exercise_database"
-        ).build()
+        ).fallbackToDestructiveMigration().build()
     }
 
     @Singleton
     @Provides
     fun provideExerciseDao(database: ExerciseDb): ExerciseDao {
         return database.exerciseDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideRoutineDao(database: ExerciseDb): RoutineDao {
+        return database.routineDao()
     }
     @Provides
     fun provideDataStoreManager(

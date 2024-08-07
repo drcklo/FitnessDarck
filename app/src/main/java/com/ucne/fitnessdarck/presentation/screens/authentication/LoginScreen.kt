@@ -80,6 +80,7 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel = hil
 
         Button(
             onClick = { authViewModel.login(email, password) },
+            enabled = authState !is AuthState.Loading,
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = "Login")
