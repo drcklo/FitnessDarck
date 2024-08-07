@@ -28,6 +28,10 @@ sealed class Screens {
 
     @Serializable
     data object Signup : Screens()
+
+    @Serializable
+    data object CreateRoutineScreen : Screens()
+
 }
 enum class BottomNavigation(val label: String, val icon: ImageVector, val route: Screens) {
     HOME("Home", Icons.Filled.Home, Screens.Home),

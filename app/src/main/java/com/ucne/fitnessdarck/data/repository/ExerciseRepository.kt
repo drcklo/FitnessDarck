@@ -11,8 +11,7 @@ import javax.inject.Singleton
 
 @Singleton
 class ExerciseRepository @Inject constructor(
-    private val api: ExerciseApi,
-    private val exerciseDao: ExerciseDao
+    private val api: ExerciseApi, private val exerciseDao: ExerciseDao
 ) {
     suspend fun fetchAndSaveExercises(page: Int, size: Int) {
         withContext(Dispatchers.IO) {
@@ -31,5 +30,31 @@ class ExerciseRepository @Inject constructor(
         return withContext(Dispatchers.IO) {
             exerciseDao.getExercises(limit, offset)
         }
+    }
+
+    suspend fun getExercisesByLevel(level: String): List<ExerciseEntity> {
+        return exerciseDao.getExercisesByLevel(level)
+    }
+
+    suspend fun getExercisesByEquipment(equipment: String): List<ExerciseEntity> {
+        return exerciseDao.getExercisesByEquipment(equipment)
+    }
+
+    suspend fun getExercisesByForce(force: String): List<ExerciseEntity> {
+        return exerciseDao.getExercisesByForce(force)
+    }
+
+    suspend fun getExercisesByMuscles(muscles: String): List<ExerciseEntity> {
+        return exerciseDao.getExercisesByMuscles(muscles)
+    }
+
+    suspend fun getExercisesByCriteria(
+        level: String, equipment: String, force: String, muscle: String
+    ): List<ExerciseEntity> {
+        return exerciseDao.getExercisesByCriteria(level, equipment, force, muscle)
+    }
+
+    suspend fun getExercisesByIds(ids: List<String>): List<ExerciseEntity> {
+        return exerciseDao.getExercisesByIds(ids)
     }
 }
