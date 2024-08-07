@@ -8,33 +8,43 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import com.ucne.fitnessdarck.Greeting
+import com.ucne.fitnessdarck.presentation.screens.authentication.LoginScreen
+import com.ucne.fitnessdarck.presentation.screens.authentication.SignUpScreen
 import com.ucne.fitnessdarck.presentation.screens.exercises.ExerciseScreen
+import com.ucne.fitnessdarck.presentation.screens.profile.ProfileScreen
 import com.ucne.fitnessdarck.presentation.screens.settings.SettingsScreen
+
 
 @Composable
 fun FitnessDarckNavHost(
-    currentRoute: String,
-    currentRouteTrimmed: String,
-    navController: NavHostController
+    navController: NavHostController,
+    isAuthenticated: Boolean
 ) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
+    val showBottomBar = remember(currentRoute, isAuthenticated) {
+        currentRoute != Screens.Login::class.qualifiedName &&
+                currentRoute != Screens.Signup::class.qualifiedName &&
+                isAuthenticated
+    }
+
     Scaffold(
         bottomBar = {
-            BottomAppBar {
-                BottomNavigation.entries
-                    .forEachIndexed { _, navigationItem ->
-
-                        val isSelected by remember(currentRoute) {
-                            derivedStateOf { currentRouteTrimmed == navigationItem.route::class.qualifiedName }
-                        }
+            if (showBottomBar) {
+                BottomAppBar {
+                    BottomNavigation.entries.forEach { navigationItem ->
+                        val isSelected = currentRoute == navigationItem.route::class.qualifiedName
 
                         NavigationBarItem(
                             selected = isSelected,
@@ -46,10 +56,17 @@ fun FitnessDarckNavHost(
                                 )
                             },
                             onClick = {
-                                navController.navigate(navigationItem.route)
+                                navController.navigate(navigationItem.route::class.qualifiedName!!) {
+                                    popUpTo(navController.graph.startDestinationId) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
                             }
                         )
                     }
+                }
             }
         }
     ) {
@@ -58,28 +75,31 @@ fun FitnessDarckNavHost(
                 .fillMaxSize()
                 .padding(it),
             navController = navController,
-            startDestination = Screens.HomeGraph
+            startDestination = if (isAuthenticated) Screens.HomeGraph::class.qualifiedName!! else Screens.Login::class.qualifiedName!!
         ) {
-            navigation<Screens.HomeGraph>(
-                startDestination = Screens.Home,
+            composable(Screens.Login::class.qualifiedName!!) {
+                LoginScreen(navController)
+            }
+            composable(Screens.Signup::class.qualifiedName!!) {
+                SignUpScreen(navController)
+            }
+            navigation(
+                startDestination = Screens.Home::class.qualifiedName!!,
+                route = Screens.HomeGraph::class.qualifiedName!!
             ) {
-                composable<Screens.Home> {
+                composable(Screens.Home::class.qualifiedName!!) {
                     Greeting("Home")
                 }
-
-                composable<Screens.Routines> {
+                composable(Screens.Routines::class.qualifiedName!!) {
                     Greeting("Routines")
                 }
-
-                composable<Screens.Exercises> {
+                composable(Screens.Exercises::class.qualifiedName!!) {
                     ExerciseScreen()
                 }
-
-                composable<Screens.Log> {
-                    Greeting("Log")
+                composable(Screens.Profile::class.qualifiedName!!) {
+                    ProfileScreen(authViewModel = hiltViewModel(), navController = navController)
                 }
-
-                composable<Screens.Settings> {
+                composable(Screens.Settings::class.qualifiedName!!) {
                     SettingsScreen()
                 }
             }
