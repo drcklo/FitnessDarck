@@ -28,7 +28,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         val dataStoreManager = DataStoreManager(applicationContext)
         val settingsViewModel = SettingsViewModel(dataStoreManager)
-        val authViewModel: AuthViewModel by viewModels() // Using viewModels to get the AuthViewModel
+        val authViewModel: AuthViewModel by viewModels()
 
         enableEdgeToEdge()
 
